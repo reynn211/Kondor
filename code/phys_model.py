@@ -17,9 +17,8 @@ def rocket_altitude(stages):
     eng_masses = [3784*4, 6545, 2355]  # Масса двигателя для каждой ступени (кг)
     fuel_masses = [39160*4, 90100, 25400]  # Масса топлива для каждой ступени (кг)
 
-    thrust_per_stage = [840000*4, 615000, 80000]  # Тяга для каждой ступени (Н)
+    thrust_per_stage = [1207500*4, 615000, 85000]  # Тяга для каждой ступени (Н)
     burnout_time = [140.0, 340.0, 240.0]  # Время до исчерпания топлива для каждой ступени (с)
-    rocket_mass = 0  # Начальная масса ракеты (кг)
 
     # Начальные условия
     altitude = 0.0
@@ -28,43 +27,43 @@ def rocket_altitude(stages):
     total_time = 0
 
     for stage in range(stages):
-    t_stage = np.arange(0, burnout_time[stage], 0.1)
+        t_stage = np.arange(0, burnout_time[stage], 0.1)
 
-    for t_step in t_stage:
-        # Обновление общего времени симуляции
-        total_time += t_step
-
-        # Расчет общей массы ракеты (с учетом двигателей и топлива текущей и последующих ступеней)
-        mass = rocket_mass + sum(eng_masses[stage:]) + sum(fuel_masses[stage:])
-
-        # Получение текущей тяги
-        thrust = thrust_per_stage[stage]
-
-        # Расчет ускорения свободного падения на текущей высоте
-        g = g_sealevel * (R / (R + altitude))**2
-        gravity_force = -g * mass
-        velocity_squared = velocity**2
-
-        # Расчет плотности воздуха на текущей высоте
-        rho_air = rho_air_sealevel * np.exp(-altitude / 8000.0)
-
-        # Расчет аэродинамического сопротивления
-        drag_force = -0.5 * rho_air * Cd * velocity_squared * rocket_reference_area
-
-        # Расчет ускорения ракеты
-        acceleration = (thrust + gravity_force + drag_force) / mass
-
-        # Интеграция скорости и высоты по времени
-        velocity += acceleration * 0.1 
-        altitude += velocity * 0.1
-
-        # Расчет и обновление расхода топлива в соответствии с временем
-        fuel_burn_rate = fuel_masses[stage] / burnout_time[stage]
-        fuel_masses[stage] -= fuel_burn_rate * 0.1
-
-        # Запись высоты на текущем временном шаге
-        altitude_points.append(altitude)
-
+        for t_step in t_stage:
+            # Обновление общего времени симуляции
+            total_time += t_step
+    
+            # Расчет общей массы ракеты (с учетом двигателей и топлива текущей и последующих ступеней)
+            mass = sum(eng_masses[stage:]) + sum(fuel_masses[stage:])
+    
+            # Получение текущей тяги
+            thrust = thrust_per_stage[stage]
+    
+            # Расчет ускорения свободного падения на текущей высоте
+            g = g_sealevel * (R / (R + altitude))**2
+            gravity_force = -g * mass
+            velocity_squared = velocity**2
+    
+            # Расчет плотности воздуха на текущей высоте
+            rho_air = rho_air_sealevel * np.exp(-altitude / 8000.0)
+    
+            # Расчет аэродинамического сопротивления
+            drag_force = -0.5 * rho_air * Cd * velocity_squared * rocket_reference_area
+    
+            # Расчет ускорения ракеты
+            acceleration = (thrust + gravity_force + drag_force) / mass
+    
+            # Интеграция скорости и высоты по времени
+            velocity += acceleration * 0.1 
+            altitude += velocity * 0.1
+    
+            # Расчет и обновление расхода топлива в соответствии с временем
+            fuel_burn_rate = fuel_masses[stage] / burnout_time[stage]
+            fuel_masses[stage] -= fuel_burn_rate * 0.1
+    
+            # Запись высоты на текущем временном шаге
+            altitude_points.append(altitude)
+    
     return altitude_points
 
 # Время симуляции

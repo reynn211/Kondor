@@ -21,6 +21,3 @@
 
 ### Ссылка на видеоотчет на YouTube
 https://www.youtube.com/watch?v=GB_B31HSJLM
-
-### Ссылка на оригинал отчета
-https://docs.google.com/document/d/1tu3Ef7NwVvkncZJ_T5esgfiEU_ryLdgB
